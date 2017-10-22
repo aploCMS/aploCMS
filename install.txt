@@ -1,0 +1,18 @@
+rename admin folder to another
+
+set $secret_path to new name in root config.php  
+
+rename  database folder and set admin/config.php
+set $database_path to another
+
+
+set how mant users  need in this confing
+
+set cat to need category
+
+set photo image standar
+
+run install.php
+ del install.php  
+ 
+ and go
