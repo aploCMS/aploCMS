@@ -7,7 +7,7 @@
 better rename (.database\) to another name ****/
 //ftp://e85167ktas@ftp.peritheatrou.net/httpdocs/admin_secret_path/database_&^%#$%
 
-     $database_path="database_wrteWW/";
+     $database_path="database/";
 ////////////////////////////////////////////////
 
 
