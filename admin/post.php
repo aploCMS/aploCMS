@@ -27,13 +27,20 @@ if ($_POST['save']=='Edit') {
      
         for($w=0;$w<=sizeof($post);$w++){
 
-         if($_POST['titlos']==$post[$w]['titlos'] ) $error="Duplicate  title error";$id=$w;
+         if($_POST['titlos']==$post[$w]['titlos'] ) $error="Duplicate  title error";
          
 
         } 
 
        
-     }
+     }else{
+            for($w=0;$w<=sizeof($post);$w++){
+
+         if($_POST['titlos']==$post[$w]['titlos'] ) $id=$w;
+         
+
+        } 
+       }
           //make dirname
             
            
@@ -46,7 +53,7 @@ if ($_POST['save']=='Edit') {
   
        
          // make dir
-      if ($error==''){
+      if ($error=='' && $id!=false){
               rename($base_path.$_POST['old_name'],$base_path.$dir_post);     
        
                 
@@ -79,9 +86,10 @@ if ($_POST['save']=='Edit') {
     
     
     save_post($post_,$base_path.$dir_post);
+    }
  header ('Location: post_show.php');
  die();
-    }  
+      
 
 }
 
@@ -119,6 +127,7 @@ $titlos=neo_name(@trim($_POST['titlos']));
       $post[$id]['dir_name']=$dir_post;
       $post[$id]['titlos']=$_POST['titlos'];
       $post[$id]['cat_name']=$_POST['cat_name'];
+      $post[$id]['grafias']=$_SESSION['UserData']['Username'];
          savedata($post,'post');
     
      
@@ -145,35 +154,7 @@ $titlos=neo_name(@trim($_POST['titlos']));
  die();
     }  
 }        
-    /*
-    if(isset($_FILES['image']) && $error==''){  
-    $filename = $_FILES['image']['tmp_name'];
-     $img='image';
-       
-      if (($_FILES['image']['type'] == "image/gif" ) || ($_FILES['image']['type'] == "image/jpeg")  || ($_FILES['image']['type'] ==    "image/jpg" )    || ($_FILES['image']['type'] == "image/png" ))
-        {
-   	    if (($_FILES[$img]["size"] < 1000000)  && (strlen(neo_name($_FILES[$img]["name"])) < 30)){
-                 if ($_FILES[$img]["error"] > 0){
-                     $error="Error upload file: " . $_FILES[$img]["error"];
-                    }else{
-
-
-                           $uploadfile = $dir_post .'/'. basename($_FILES['image']['name']);
-            		if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadfile)) {
-                         
-            		} else {
-                 	$error="Upload failed";
-			}
-               
-                 }
-           }
-     
-      }
-   }
-   */
-  
-
-
+   
 
 
 
@@ -219,18 +200,18 @@ if(isset($_REQUEST['q'])=='edit'){
        </tr>
        <tr>
            <td align="right" valign="top"> Keimeno</td>
-           <td><textarea name="keimeno"  rows="12" cols="60"><?=trim($_POST['keimeno']) ;?>                                 
+          <td><textarea id="keimeno" name="keimeno"  rows="16" cols="90" required><?=remove(strip_tags(trim($_POST['keimeno']),'<br><p><h><img><div>')) ;?>
                </textarea></td>
          <td></td>                                
        </tr>
        <tr>
            <td>Social mini  descr.</td>
            <td>
-               <textarea name="mini_keimeno" rows="4" cols="20" >  
-               <?=trim($_POST['mini_keimeno']); ?>                                  
+               <textarea id="mini_keimeno" name="mini_keimeno" rows="8" cols="50" required >  
+               <?=remove(trim($_POST['mini_keimeno'])); ?>                                  
                </textarea><br/><br/>
                 Keyword ->example(hi,good,bye):
-                <input type="text" name="keyword" value="<?=trim($_POST['keyword']);  ?>" size="70"/>                         
+                <input type="text" name="keyword" value="<?=trim($_POST['keyword']);  ?>" size="70" required/>                         
            </td>
            <td>
                
@@ -242,10 +223,38 @@ if(isset($_REQUEST['q'])=='edit'){
              <?php 
                echo $error;
                if(isset($_REQUEST['q'])=='edit')
-               {echo '<input  type="submit" name="save" value="Edit" class="save" '.$disable.'>';}
-                 else{ echo '<input  type="submit" name="save" value="Save" class="save" '.$disable.'>';}
+               {echo '<input  type="submit" name="save" value="Edit" class="save" onclick="kane();"'.$disable.'>';}
+                 else{ echo '<input  type="submit" name="save" value="Save" class="save" onclick="kane();" '.$disable.'>';}
              ?>
+                      <script>
+                        function vres(x,kl){
+                         
+                            var tt=x;
+                           var tt=tt.substring(4);
+                            var t='<a href="http://'+x+'" id="ok" target="blank_">';
+                            var tt=tt+'</a>';
+                            
+                            return t+tt;
+                        }
+                        function kane(){
+                         var k=document.getElementById('keimeno').value;
+                         var m_k=document.getElementById('mini_keimeno').value;
+                          k=k.trim();
+                          m_k=m_k.trim();
+                          // make url 
+                                                    
+                          k=k.replace(/http|https|www/gi, function myFunction(x){return x.toLowerCase();});
+                          k=k.replace(/http:\/\/www.|https:\/\/www./gi, 'www.');
+                          k = k.replace(/((www.)[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?)/gi, '<a href="http://$1" target="blank_">$1</a>');
 
+
+                         // make enter 
+                         k=k.replace(/\r?\n/g, '<br/>');  
+                          m_k=m_k.replace(/\r?\n/g, '<br/>'); 
+                         document.getElementById('keimeno').value=(k);
+                         document.getElementById('mini_keimeno').value=(m_k);
+                         }
+                      </script>
 
                                                                                                </td>
        </tr>

@@ -80,8 +80,8 @@ include 'include/header.php';
 		</li>
 			
 					<li class="buttons">
-			    			    
-				<input id="saveForm" class="Save" type="submit" name="Save" value="Save" />
+		<?php if ($_SESSION['UserData']['rolos']=="admin"){$disable='';}else{$disable='disabled';}?>	    			    
+				<input id="saveForm" class="Save" type="submit" name="Save" value="Save" <?=$disable?>/>
 		</li>
 			</ul>
 		</form>	

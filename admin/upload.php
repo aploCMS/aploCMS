@@ -14,19 +14,24 @@ if(isset($_REQUEST['del'])){
 } 
 
 
-if(isset($_POST['dir_name'])){	$dir=$base_path.$_POST['dir_name'].'/';} else{$dir=$base_path.$_REQUEST['dir_name'].'/';}
-     	$img_url = glob($dir."*.{jpg,gif,png,jpeg}", GLOB_BRACE) ;
+if(isset($_POST['dir_name'])){	$dir=$base_path.$_POST['dir_name'].'/';
+                              $_REQUEST['titlos']=$_POST['titlos'];
+                             }else{$dir=$base_path.$_REQUEST['dir_name'].'/';}
+
+     	$img_url = glob($dir."*.{jpg,gif,png,jpeg,JPG,GIF,PNG,JPEG}", GLOB_BRACE) ;
        
+/////load data
+    $post=load_post($dir);
 
 
 if (isset($_FILES['image'])) {
     
     function getExtension($str) {
 
-         $i = strrpos($str,".");
-         if (!$i) { return ""; } 
-         $l = strlen($str) - $i;
-         $ext = substr($str,$i+1,$l);
+         $im = strrpos($str,".");
+         if (!$im) { return ""; } 
+         $l = strlen($str) - $im;
+         $ext = substr($str,$im+1,$l);
          return $ext;
  }
  $error='';
@@ -44,7 +49,7 @@ for($i=0; $i<=$total; $i++) {
             $extension = strtolower(getExtension($filename));
             if (($extension == "jpg") || ($extension == "jpeg") || ($extension == "png") || ($extension == "gif")){
              
-                $newname = $filename; //"newphoto".($total+$i).".".$extension;
+                $newname = neo_namef($filename); //"newphoto".($total+$i).".".$extension;
                 $size=filesize($_FILES['image']['tmp_name'][$i]);
                 
                 if($extension=="jpg" || $extension=="jpeg" ){
@@ -80,11 +85,19 @@ for($i=0; $i<=$total; $i++) {
 
 
 
-$img_url = glob($dir."*.{jpg,gif,png,jpeg}", GLOB_BRACE) ;
+$img_url = glob($dir."*.{jpg,gif,png,jpeg,JPG,GIF,PNG,JPEG}", GLOB_BRACE) ;
 
 }
 
+if(isset($_POST['first'])){
+   
+   
+   $post['first_img_url']=str_replace($dir,'',$_POST['first']);
 
+   save_post($post,$base_path.$_POST['dir_name']);
+   
+
+}
 
 
 include 'include/header.php';
@@ -93,22 +106,33 @@ include 'include/header.php';
  <h2><?=$_REQUEST['titlos'] ?></h2>
 <?php
        if($img_url!=null){
+        echo '<table border="1">
+              <form action="upload.php" method="post">
+              <input type="hidden" name="dir_name" value="'.$_REQUEST['dir_name'].'" />
+              <input type="hidden" name="titlos" value="'.$_REQUEST['titlos'].'" />';
           for($w=0;$w<count($img_url);$w++){
-           echo '<table border="1px"><td><a href="upload.php?del='.$img_url[$w].'&dir_name='.$_REQUEST['dir_name'].'">Delete X </a><img id="img'.$w.'" src="'.$img_url[$w].'" width="50px" height="NaN" align="left" style="'.$post[$q]['photo_efe'].'"  /></td></table>';
+              
+            if(str_replace($dir,'',$img_url[$w])==$post['first_img_url']) {$first='checked';}else{ $first='';}
+           echo '<table border="1px"><td><a href="upload.php?del='.$img_url[$w].'&dir_name='.$_REQUEST['dir_name'].'">Delete photo X </a><img id="img'.$w.'" src="'.$img_url[$w].'" width="250px" height="NaN" align="left" style="'.$post[$q]['photo_efe'].'"  /></td>
+  <th>Set first photo =<input type="radio" value="'.$img_url[$w].'" name="first" '.$first.'> </th></table>';
            
           }
-        }
+        echo '<input type="submit" nane="set" value="update"></form></table>';
+      }
 
 if(count($img_url)<$max_photo){
 ?>
-
+<br/><br/>
+    <table border="1px"><tr><td>
      <form enctype="multipart/form-data" action="upload.php" method="post" name="Login_Form">
+        <input type="hidden" name="titlos" value="<?=$_REQUEST['titlos'];?>" />
         <input type="hidden" name="dir_name" value="<?=$_REQUEST['dir_name'];?>" />
-          <input id="image" type="file"  name="image[]"  multiple>
+          <label>Add new photo   </label><input id="image" type="file"  name="image[]"  multiple>
             <p id='demo'><span onclick="image(0)">more</span></p>
-        <input  type="submit" name="submit" value="Save" class="Button3" />
+        <input  type="submit" name="submit" value="Upload photo" class="Button3" />
      </form>
-
+    </td></tr>
+    </table>
 <script>
    var metra=<?=count($img_url) ; ?>;
    var poso=<?=$max_photo; ?> ;

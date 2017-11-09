@@ -3,7 +3,8 @@
 
 session_start();
 include ("config.php");
-	
+include "functions/serialize.php";
+include 'include/header.php';	
 	/*  Login  */	
 	if(isset($_POST['login'])){
 		

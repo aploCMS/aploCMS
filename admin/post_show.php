@@ -23,7 +23,9 @@ float: left;
 .username{
  float: right;
  }
-
+.mini_keimeno{
+max-height: 100px;overflow: hidden;
+}
 </style>
 
 <?php
@@ -91,10 +93,22 @@ if(isset($_REQUEST['del'])=='del'){
         }
      savedata($post,'post');
 }
-?>
+if(isset($_REQUEST['cs'])){
+ 
+     
+	for($q=sizeof($post);$q>0;$q=$q-1){
+              
+            if($post[$q]['dir_name']==$_REQUEST['dir_name']  )   {
+                if($_REQUEST['cs']=='yes'){$post[$q]['central_slider']='yes';savedata($post,'post');
+                  } else{$post[$q]['central_slider']='no';savedata($post,'post');
+                         }
 
-  
-<?php
+           }
+
+        }
+
+ 
+}
 function show_post(){
   global $cat,$post,$q,$base_path; 
       if($post[$q]['titlos']!=''){
@@ -102,21 +116,21 @@ function show_post(){
       
 
      	$dir=$base_path.$post[$q]['dir_name'].'/';
-     	$img_url = glob($dir."*.{jpg,gif,png,jpeg}", GLOB_BRACE) ;
-        if($img_url!=null){
+     	$img_url = glob($dir."*.{jpg,gif,png,jpeg,JPG,GIF,PNG,JPEG}", GLOB_BRACE) ;
+        if($img_url!=null){ 
         $img='<img id="img" src="'.$img_url[0].'" width="50px" height="NaN" align="left" style="'.$post[$q]['photo_efe'].'"  />';
         }
         //load data
-           $post_=load_post($base_path.$dir);
+           $post_new=load_post($dir);
     
      ?><table width="80%">
           <tr>
             <th colspan="4"><div id="post<?=$q ?>"  class="post">
              
-		<div class="titlos">Titlos : <?=$post_['titlos'] ?><br/> 
+		<div class="titlos">Titlos : <?=$post_new['titlos'] ?><br/> 
                 Category : <?=$post[$q]['cat_name'] ?></div>
                    
-                <label class="nickname">Edit by : <?=$post_['name'] ?>
+                <label class="nickname">Edit by : <?=$post_new['name'] ?>
              </th>
            </tr>
           <td rowspan="2"><?=$img ?></td>
@@ -124,14 +138,17 @@ function show_post(){
     <td colspan="2"></td>
   </tr>
             <tr>
-    <td colspan="2">    <label class="mini_keimeno">-> <?=$post_['keimeno'] ?> </label>  </td>
-      <td>      
-         <div class="edit">
-            <a href="upload.php?dir_name=<?=$post_['dir_name']; ?>&titlos=<?=$post_['titlos'] ?>">Photos</a>
-           <a href="post.php?q=edit&dir_name=<?=$post_['dir_name']?>">Edit</a>&nbsp; 
-          
-            <?php if($post_['publish']=='yes') $yes='->yes'; ?>
-           <a href="post_show.php?public=publish&dir_name=<?=$post_['dir_name'] ?>">Publish<?=$yes; ?></a>
+    <td colspan="2" >    <div class="mini_keimeno"> <?=$post_new['keimeno'] ?> </div>  </td>
+      <td>    
+         <div class="edit" style="min-width: 180px;">
+           <a href="post_show.php?dir_name=<?=$post_new['dir_name']; ?>&cs=<?php if($post[$q]['central_slider']=='yes') {echo 'no';$set='set->OK';}else{echo 'yes';$set='set->no';} ?>">Big slider-><?=$set?></a>
+                                                                                   <br/><br/>
+           <?=count($img_url);?> <a href="upload.php?dir_name=<?=$post_new['dir_name']; ?>&titlos=<?=$post_new['titlos'] ?>">Photos</a>
+                                                                                   <br/><br/>
+           <a href="post.php?q=edit&dir_name=<?=$post_new['dir_name']?>">Edit</a>&nbsp; 
+                                                                                   <br/><br/>
+            <?php if($post_new['publish']=='yes') $yes='->yes'; ?>
+           <a href="post_show.php?public=publish&dir_name=<?=$post_new['dir_name'] ?>">Publish<?=$yes; ?></a>
            
 
 	 </div> 
@@ -141,24 +158,25 @@ function show_post(){
        </table>
          <hr width="80%" align="center">
     <?php
-      unset($post_); 
+      unset($post_new); 
      }
 }
  
 
 include "include/header.php";
   
-  
+  echo sizeof($post);
  
     for($q=sizeof($post);$q>=0;$q--){
      if ($_SESSION['UserData']['rolos']=="admin"){
-        show_post();
+        show_post();echo $q.'a';
        }
      if ($_SESSION['UserData']['rolos']=="author" && $post[$q]['grafias']==$_SESSION['UserData']['Username'] ){
-        show_post();
+        show_post();echo $q.'b';
        }
+  echo $q.'c';echo 'pp'.$_SESSION['UserData']['rolos'].'pp';
  }
 
 
-
+include "include/footer.php";
 ?>
