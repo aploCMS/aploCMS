@@ -35,6 +35,6 @@
 
 <meta name="geo.region" content="GR-A1" />
 <meta name="geo.placename" content="Athens" />
-<meta name="geo.position" content="37.977449;23.733795" />
-<meta name="ICBM" content="37.977449, 23.733795" />
+<meta name="geo.position" content=" " />
+<meta name="ICBM" content=" " />
 </head>
