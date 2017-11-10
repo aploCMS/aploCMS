@@ -17,7 +17,7 @@
 	aploCMS  ...το περιθεάτρου πρωτοπορεί <br/>έφτιαξε και εκπέμπει με δικό του CMS ,<br/>
         το aploCMS ..
 
-</font><.br>
+</font></br>
   <font color="red">Not use cookies.Δεν χρησιμοποιούμε cookies.</font>
  <img align="right" src="favicon.ico" >
 
