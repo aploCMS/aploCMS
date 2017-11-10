@@ -20,7 +20,7 @@
 <meta property="og:type" content="article" />
 <meta property="og:image" content="" />
 <meta property="og:url" content="<?= $_SERVER['HTTP_HOST']; ?>" />
-<meta property="og:description" content="<?=$setting['site_desk']?>" />
+<meta property="og:description" content="<?=$setting['site_desc']?>" />
 
 
 <!-- For Twitter -->
@@ -32,8 +32,8 @@
 
 <meta name="geo.region" content="GR-A1" />
 <meta name="geo.placename" content="Athens" />
-<meta name="geo.position" content="37.977449;23.733795" />
-<meta name="ICBM" content="37.977449, 23.733795" />
+<meta name="geo.position" content=" " />
+<meta name="ICBM" content=" " />
 </head>
 
 
